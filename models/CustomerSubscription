@@ -35,6 +35,14 @@ const CustomerSubscriptionSchema = mongoose.Schema({
     product: {
         type: Object, 
         ref: 'Product' 
+    },
+    is_trial: {
+        type: Boolean,
+        default: false
+    },
+    trial_used: {
+        type: Boolean,
+        default: false
     }
 });
 

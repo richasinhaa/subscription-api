@@ -36,11 +36,48 @@ router.get('/byCustomerId/:customerId', async (req, res) => {
 });
 
 router.post('/buy', async (req, res) => {
-    
+    const isTrial = req.body.is_trial;
+    if(isTrial) {
+        trialUsed = true;
+    } 
     const subscription = new CustomerSubscription({
         customer_id: req.body.customer_id,
         product_id: req.body.product_id,
         is_active: req.body.is_active,
+        is_trial: isTrial,
+        trial_used: trialUsed,
+        service_provider_id: req.body.service_provider_id
+    });
+
+    
+        const savedSubscription = await subscription.save();
+        const customer = await User.findById(subscription.customer_id);
+        savedSubscription.customer = customer;
+
+        const product = await Product.findById(subscription.product_id);
+        savedSubscription.product = product;
+
+        const subscriptionPeriod = (isTrial == true) ? product.trial_period : product.subscription_period;
+        const current = new Date();
+        const renewDate = current.setDate(current.getDate() + subscriptionPeriod);
+        savedSubscription.renew_date = renewDate;
+        
+        res.status(200).json(savedSubscription);
+    
+});
+
+/**
+ * Feature 3 : User B can also offer a 1,3,7 Day trial offer for user A to chat. Trial will only be applicable
+ * once and in future no more trials can be offered by user B to user A.
+ */
+
+router.put('/renew', async (req, res) => {
+    const subscription = new CustomerSubscription({
+        customer_id: req.body.customer_id,
+        product_id: req.body.product_id,
+        is_active: req.body.is_active,
+        is_trial: req.body.is_trial,
+        trial_used: req.body.trial_used,
         service_provider_id: req.body.service_provider_id
     });
 
@@ -51,8 +88,6 @@ router.post('/buy', async (req, res) => {
 
         const product = await Product.findById(subscription.product_id);
         savedSubscription.product = product;
-
-        
 
         const subscriptionPeriod = product.subscription_period;
         const current = new Date();

@@ -69,7 +69,7 @@ router.post('/chat', async (req, res) => {
 });
 
 /**
- * User A should be reminded about renewal of subscription 7,3,1,0 days before the expiry
+ * Feature 2 : User A should be reminded about renewal of subscription 7,3,1,0 days before the expiry
  * & 1,3,7 day post expiry if no renewal is done
  * 
  * Can be run as a cron job
@@ -98,7 +98,13 @@ router.post('/reminder', async (req, res) => {
             if(renewsOn == plusOne || renewsOn == plusThree || renewsOn == plusSeven 
                 || renewsOn == minusOne || renewsOn == minusThree || renewsOn == minusSeven) {
                     var message = 'Your subscription for ' + product.name + ' will expire on ' + renewsOn + '. Please renew.';
-                    reminderList.push(message);
+
+                    const reminder = {
+                        message: message,
+                        customer_id: s.customer_id
+                      };
+
+                    reminderList.push(reminder);
                 }
         };
         
