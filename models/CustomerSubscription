@@ -1,0 +1,31 @@
+const mongoose = require('mongoose');
+
+const CustomerSubscriptionSchema = mongoose.Schema({
+    customer_id: {
+        type: String,
+        required: true
+    },
+    product_id: {
+        type: String,
+        required: true
+    },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
+    renew_date: {
+        type: Date,
+        required: true
+    },
+    customer: {
+        type: Object, 
+        ref: 'User' 
+    },
+    product: {
+        type: Object, 
+        ref: 'Product' 
+    }
+});
+
+
+module.exports = mongoose.model('CustomerSubscriptions', CustomerSubscriptionSchema);

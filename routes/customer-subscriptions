@@ -1,0 +1,62 @@
+const express = require('express');
+const router = express.Router();
+const Product = require('../models/Product');
+const User = require('../models/User');
+const CustomerSubscription = require('../models/CustomerSubscription');
+
+//ROUTES
+router.get('/', async (req, res) => {
+    try {
+        const subscriptions = await CustomerSubscription.find();
+        res.status(200).json(subscriptions);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.get('/:subscriptionId', async (req, res) => {
+    try {
+        const subscription = await CustomerSubscription.findById(req.params.subscriptionId);
+        const customer = await User.findById(subscription.customer_id);
+        subscription.customer = customer;
+        const product = await Product.findById(subscription.product_id);
+        subscription.product = product;
+        res.status(200).json(subscription);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.get('/byCustomerId/:customerId', async (req, res) => {
+        const customerId = req.params.customerId;
+        const subscriptions = await CustomerSubscription.find({ customer_id: customerId }).exec();
+        res.status(200).json(subscriptions);
+    
+});
+
+router.post('/', async (req, res) => {
+    const subscription = new CustomerSubscription({
+        customer_id: req.body.customer_id,
+        product_id: req.body.product_id,
+        is_active: req.body.is_active,
+        renew_date: req.body.renew_date
+    });
+
+    try {
+        const savedSubscription = await subscription.save();
+        const customer = await User.findById(subscription.customer_id);
+        savedSubscription.customer = customer;
+        const product = await Product.findById(subscription.product_id);
+        savedSubscription.product = product;
+        res.status(200).json(savedSubscription);
+
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+
+});
+
+
+
+
+module.exports = router;
