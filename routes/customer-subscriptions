@@ -4,6 +4,7 @@ const Product = require('../models/Product');
 const User = require('../models/User');
 const CustomerSubscription = require('../models/CustomerSubscription');
 
+
 //ROUTES
 router.get('/', async (req, res) => {
     try {
@@ -34,26 +35,34 @@ router.get('/byCustomerId/:customerId', async (req, res) => {
     
 });
 
-router.post('/', async (req, res) => {
+router.post('/buy', async (req, res) => {
+    
     const subscription = new CustomerSubscription({
         customer_id: req.body.customer_id,
         product_id: req.body.product_id,
         is_active: req.body.is_active,
-        renew_date: req.body.renew_date
+        service_provider_id: req.body.service_provider_id
     });
 
     try {
         const savedSubscription = await subscription.save();
         const customer = await User.findById(subscription.customer_id);
         savedSubscription.customer = customer;
+
         const product = await Product.findById(subscription.product_id);
         savedSubscription.product = product;
+
+        
+
+        const subscriptionPeriod = product.subscription_period;
+        const current = new Date();
+        const renewDate = current.setDate(current.getDate() + subscriptionPeriod);
+        savedSubscription.renew_date = renewDate;
+        
         res.status(200).json(savedSubscription);
-
     } catch (err) {
-        res.status(500).json({ message: err });
+        res.status(400).json({ message: err });
     }
-
 });
 
 

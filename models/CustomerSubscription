@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+const today = new Date();
+const future = new Date();
 
 const CustomerSubscriptionSchema = mongoose.Schema({
     customer_id: {
@@ -9,13 +13,20 @@ const CustomerSubscriptionSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    service_provider_id: {
+        type: String
+    },
     is_active: {
         type: Boolean,
         default: true
     },
+    start_date: {
+        type: Date,
+        default: today
+    },
     renew_date: {
         type: Date,
-        required: true
+        default: moment().add(30, 'days').calendar() 
     },
     customer: {
         type: Object, 

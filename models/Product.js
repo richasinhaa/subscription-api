@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const today = new Date();
+
 const ProductSchema = mongoose.Schema({
     name: {
         type: String,
@@ -12,6 +14,10 @@ const ProductSchema = mongoose.Schema({
     is_valid: {
         type: Boolean,
         default: true
+    },
+    subscription_period: {
+        type: Number,
+        default: 30
     },
     has_trial: {
         type: Boolean,
