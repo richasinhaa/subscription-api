@@ -58,13 +58,13 @@ router.post('/', async (req, res) => {
     const product = new Product({
         name: req.body.name,
         price: price,
+        subscription_period: req.body.subscription_period,
         is_valid: req.body.is_valid,
         has_trial: req.body.has_trial,
         trial_period: req.body.trial_period,
         service_provider_id: req.body.service_provider_id,
         is_bundle: isBundle,
-        bundle_discount: bundleDiscount
-
+        bundle_discount: bundleDiscount //percentage
     });
 
     try {

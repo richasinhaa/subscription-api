@@ -19,7 +19,8 @@ const UserSchema = mongoose.Schema({
     },
     user_type: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Customer', 'ServiceProvider']
     }
 });
 

@@ -37,12 +37,28 @@ router.get('/byCustomerId/:customerId', async (req, res) => {
 });
 
 router.post('/buy', async (req, res) => {
-
     const isTrial = req.body.is_trial;
     var trialUsed = false;
+
+    //If trial subscription buy request set trial_used flag as true (because trial can be used only once)
     if(isTrial) {
         trialUsed = true;
     } 
+    const customerId = req.body.customer_id;
+    const productId = req.body.product_id;
+    const serviceProviderId = req.body.service_provider_id;
+
+    const subscriptions = await CustomerSubscription.find({ 
+        customer_id: customerId, product_id: productId, service_provider_id: serviceProviderId, trial_used: true
+    }).exec();
+
+    if(subscriptions.length > 0) {
+        trialUsed = true;
+    }
+
+    if(subscriptions.length > 0 && isTrial) {
+        return res.status(400).json({ message: 'Trial has already been used' });
+    }
 
     try {
         const subscription = new CustomerSubscription({
@@ -54,19 +70,19 @@ router.post('/buy', async (req, res) => {
             service_provider_id: req.body.service_provider_id
         });
 
-            const savedSubscription = await subscription.save();
-            const customer = await User.findById(subscription.customer_id);
-            savedSubscription.customer = customer;
+        const savedSubscription = await subscription.save();
+        const customer = await User.findById(subscription.customer_id);
+        savedSubscription.customer = customer;
 
-            const product = await Product.findById(subscription.product_id);
-            savedSubscription.product = product;
+        const product = await Product.findById(subscription.product_id);
+        savedSubscription.product = product;
 
-            const subscriptionPeriod = (isTrial == true) ? product.trial_period : product.subscription_period;
-            const current = new Date();
-            const renewDate = current.setDate(current.getDate() + subscriptionPeriod);
-            savedSubscription.renew_date = renewDate;
-            
-            res.status(200).json(savedSubscription);
+        const subscriptionPeriod = (isTrial == true) ? product.trial_period : product.subscription_period;
+        const current = new Date();
+        const renewDate = current.setDate(current.getDate() + subscriptionPeriod);
+        savedSubscription.renew_date = renewDate;
+        
+        res.status(200).json(savedSubscription);
     } catch (err) {
         res.status(400).json({ message: err });
     }
@@ -84,8 +100,9 @@ router.put('/renew/:subscriptionId', async (req, res) => {
             const subscription = await CustomerSubscription.findById(subscriptionId);
             if(subscription) {
                 const trialUsed = subscription.trial_used;
-                if(trialUsed) {
-                    res.status(400).json({ message: 'Trial has already been used' });
+                const isTrial = subscription.is_trial;
+                if(trialUsed && isTrial) {
+                    return res.status(400).json({ message: 'Trial has already been used' });
                 } else {
                     const product = await Product.findById(subscription.product_id);
                     const subscriptionPeriod = product.subscription_period;

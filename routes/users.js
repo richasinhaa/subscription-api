@@ -90,12 +90,13 @@ router.post('/reminder', async (req, res) => {
 
             var plusOne = moment().add(1, 'days').format('DD-MM-YYYY');
             var plusThree = moment().add(3, 'days').format('DD-MM-YYYY'); 
-            var plusSeven= moment().add(7, 'days').format('DD-MM-YYYY'); 
+            var plusSeven = moment().add(7, 'days').format('DD-MM-YYYY'); 
+            var zero = moment().format('DD-MM-YYYY'); 
             var minusOne = moment().subtract(1, 'days').format('DD-MM-YYYY'); 
             var minusThree = moment().subtract(3, 'days').format('DD-MM-YYYY'); 
             var minusSeven = moment().subtract(7, 'days').format('DD-MM-YYYY'); 
 
-            if(renewsOn == plusOne || renewsOn == plusThree || renewsOn == plusSeven 
+            if(renewsOn == plusOne || renewsOn == plusThree || renewsOn == plusSeven || renewsOn == zero
                 || renewsOn == minusOne || renewsOn == minusThree || renewsOn == minusSeven) {
                     var message = 'Your subscription for ' + product.name + ' will expire on ' + renewsOn + '. Please renew.';
 
