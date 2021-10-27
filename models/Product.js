@@ -33,6 +33,20 @@ const ProductSchema = mongoose.Schema({
     service_provider: {
         type: Object, 
         ref: 'User' 
+    },
+    has_active_campaign: {
+        type: Boolean, 
+        default: false 
+    },
+    campaign_id: {
+        type: String
+    },
+    is_bundle: {
+        type: Boolean,
+        default: false
+    },
+    bundle_discount: {
+        type: Number
     }
 });
 
