@@ -25,5 +25,4 @@ http://ec2-18-217-213-17.us-east-2.compute.amazonaws.com:3000/
 
 ## Service Provider and Customer Workflows
 
-
-![Subscription](https://user-images.githubusercontent.com/45893103/139255817-9e3af1f2-25e4-41dd-8683-09e97c39306d.png)
+![Subscription (1)](https://user-images.githubusercontent.com/45893103/139261772-f88731ea-5955-4187-85b7-87b6f3a35bd1.png)
