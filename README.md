@@ -2,6 +2,12 @@
 
 Backend system where user A can chat with user B only when user A has paid up the subscription amount which user B has fixed for anyone to chat with him/her.
 
+## Technologies
+
+Database - MongoDB
+Backend - ExpressJS, NodeJS
+System hosted on AWS
+
 ## Installation
 
 npm install
