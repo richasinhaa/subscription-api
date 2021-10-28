@@ -4,9 +4,10 @@ Backend system where user A can chat with user B only when user A has paid up th
 
 ## Technologies
 
-Database - MongoDB
-Backend - ExpressJS, NodeJS
-System hosted on AWS
+Database - MongoDB <br/>
+Backend - ExpressJS, NodeJS <br/>
+Database hosted on MongoDB Atlas
+System hosted on AWS 
 
 ## Installation
 
