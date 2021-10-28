@@ -49,6 +49,7 @@ router.post('/', async (req, res) => {
 *  subscription if no renewal is done then user A will not be able to converse with user B.
  */
 router.post('/chat', async (req, res) => {
+    var chatAllowed = false;
     try {
         const customer = await User.findById(req.body.customer);
         const serviceProviderId = req.body.service_provider;
@@ -58,7 +59,7 @@ router.post('/chat', async (req, res) => {
             customer_id: customer._id, service_provider_id: serviceProviderId, is_active: true, renew_date: { $gt: today }
         }).exec();
         
-        const chatAllowed = (subscriptions.length > 0)? true : false;
+        chatAllowed = (subscriptions.length > 0)? true : false;
 
         var response = [{"chat_allowed":chatAllowed}];
         res.status(200).json(response);
