@@ -25,8 +25,7 @@ const CustomerSubscriptionSchema = mongoose.Schema({
         default: today
     },
     renew_date: {
-        type: Date,
-        default: moment().add(30, 'days').calendar() 
+        type: Date
     },
     customer: {
         type: Object, 
