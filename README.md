@@ -22,9 +22,6 @@ npm install
 <br/>
 npm start
 
-## AWS Hosting 
-
-http://ec2-18-217-213-17.us-east-2.compute.amazonaws.com:3000/
 
 ## API Documentation (Endpoints, Requests & Response)
 
